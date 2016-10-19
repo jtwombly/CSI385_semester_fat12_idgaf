@@ -1,0 +1,1 @@
+fatSupport.o: ../fatSupport.c

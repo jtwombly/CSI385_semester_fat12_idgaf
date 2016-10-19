@@ -83,6 +83,7 @@ int shell() {
 				pid_t pid = fork();
 				if (pid == 0) {
 					printf("Child process for %s.\n", fields);
+					//this is where I'd call pbs function
 					printf("Child process killed\n");
 					exit(0);
 				}
