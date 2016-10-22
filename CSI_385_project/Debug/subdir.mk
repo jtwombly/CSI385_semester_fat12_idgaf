@@ -6,16 +6,19 @@
 C_SRCS += \
 ../fat.c \
 ../fatSupport.c \
+../pbs.c \
 ../shell_code.c 
 
 OBJS += \
 ./fat.o \
 ./fatSupport.o \
+./pbs.o \
 ./shell_code.o 
 
 C_DEPS += \
 ./fat.d \
 ./fatSupport.d \
+./pbs.d \
 ./shell_code.d 
 
 

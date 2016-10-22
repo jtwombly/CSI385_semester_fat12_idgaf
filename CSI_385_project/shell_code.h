@@ -15,10 +15,14 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include "fatSupport.h"
+#include "boot_sector.h"
 
-//pthread_mutex_t mlock22 = PTHREAD_MUTEX_INITIALIZER;
-//pthread_cond_t mcondition22 = PTHREAD_COND_INITIALIZER;
 
 int shell();
+
+//in pbs.c
+struct boot_sector rbs();
+int get_large_int(char* boot, int val);
+void pbs(struct boot_sector BS);
 
 #endif /* SHELL_CODE_H_ */

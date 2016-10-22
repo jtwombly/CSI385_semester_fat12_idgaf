@@ -7,6 +7,12 @@
 #include "shell_code.h"
 
 int shell() {
+	if (FILE_SYSTEM_ID == NULL)
+	{
+	  printf("Could not open the floppy drive or image.\n");
+	  exit(1);
+	}
+	struct boot_sector BS = rbs();
 	printf("Welcome to shell.\n");
 	while (1) {
 		char buffer[128];
@@ -84,6 +90,7 @@ int shell() {
 				if (pid == 0) {
 					printf("Child process for %s.\n", fields);
 					//this is where I'd call pbs function
+					pbs(BS);
 					printf("Child process killed\n");
 					exit(0);
 				}
