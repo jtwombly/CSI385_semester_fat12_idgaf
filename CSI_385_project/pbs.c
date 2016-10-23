@@ -19,7 +19,9 @@ struct boot_sector rbs()
 
 	if (read_sector(0, boot) == -1)
 	  printf("Something has gone wrong -- could not read the boot sector\n");
-
+	BS.vol_label = malloc(11*sizeof(char));
+	BS.sys_type = malloc(8*sizeof(char));
+	BS.vol_id = malloc(4*sizeof(char));
 	BS.bp_sector = get_large_int(boot, 11);
 	BS.sp_cluster = (int) boot[13];
 	BS.num_fats = (int) boot[16];
@@ -33,12 +35,13 @@ struct boot_sector rbs()
 	for (int i = 0; i < 4; i++){
 		BS.vol_id[i] = boot[39 + i];
 	}
-	for (int i = 0; i < 11; i++){
-			BS.vol_label[i] = boot[43 + i];
-		}
 	for (int i = 0; i < 8; i++){
 				BS.sys_type[i] = boot[54 + i];
 			}
+	for (int i = 0; i < 11; i++){
+				BS.vol_label[i] = boot[43 + i];
+			}
+	BYTES_PER_SECTOR = BS.bp_sector;
 	return BS;
 }
 

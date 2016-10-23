@@ -5,7 +5,7 @@ unsigned int get_fat_entry(int fat_entry_number, char* fat);
 void set_fat_entry(int fat_entry_number, int value, char* fat);
 
 // 13 is NOT the correct number -- you fix it!
-#define BYTES_TO_READ_IN_BOOT_SECTOR 61
+#define BYTES_TO_READ_IN_BOOT_SECTOR 512
 
 /******************************************************************************
  * You must set these global variables:

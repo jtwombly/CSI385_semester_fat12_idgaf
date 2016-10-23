@@ -25,4 +25,9 @@ struct boot_sector rbs();
 int get_large_int(char* boot, int val);
 void pbs(struct boot_sector BS);
 
+//in pfe.c
+void pfe(int min, int max, struct boot_sector BS);
+int checkRange(int min, int max);
+char* read_fat_table(struct boot_sector BS, int x);
+
 #endif /* SHELL_CODE_H_ */

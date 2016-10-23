@@ -29,15 +29,17 @@ int main(int argc, char * argv[])
 		case 0:
 		case 1:
 			FILE_SYSTEM_ID = fopen("Sample_disks/floppy1", "r+");
+			printf("floppy 1");
 			break;
 		case 2:
 			FILE_SYSTEM_ID = fopen("Sample_disks/floppy2", "r+");
+			printf("floppy 2");
 			break;
 		case 3:
 			FILE_SYSTEM_ID = fopen("Sample_disks/floppy3", "r+");
+			printf("floppy 3");
 			break;
 		default:
-			FILE_SYSTEM_ID = fopen("Sample_disks/floppy1", "r+");
 			printf("error in handler\n");
 			break;
 		}

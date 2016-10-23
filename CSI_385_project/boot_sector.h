@@ -20,9 +20,9 @@ struct boot_sector
 	int sp_track;
 	int num_heads;
 	char boot_sig;
-	char vol_id[4];
-	char vol_label[11];
-	char sys_type[8];
+	char* vol_id;
+	char* sys_type;
+	char* vol_label;
 };
 
 #endif /* BOOT_SECTOR_H_ */
