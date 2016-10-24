@@ -39,10 +39,11 @@ void pfe(int min, int max, struct boot_sector BS)
 char* read_fat_table(struct boot_sector BS, int x)
 {
 	//reads one entire fat table to giant string
+	//approx. size = 4K
 	char * fat_sector = malloc(BYTES_PER_SECTOR*(sizeof(char)));
-	char * fat_table = malloc(8 * BYTES_PER_SECTOR*(sizeof(char)));
-	int start = 1 + (x* 9);
-	int end = 9 + (x * 9);
+	char * fat_table = malloc(BS.sp_fat * BYTES_PER_SECTOR*(sizeof(char)));
+	int start = 1 + (x* BS.sp_fat);
+	int end = (x + 1) * BS.sp_fat;
 	if (x > BS.num_fats)
 	{
 		printf("Error: tried to read non-existent FAT table.\n");

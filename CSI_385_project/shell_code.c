@@ -12,6 +12,9 @@ int shell() {
 	  printf("Could not open the floppy drive or image.\n");
 	  exit(1);
 	}
+	char* current_dir;
+	current_dir = malloc(sizeof(char));
+	current_dir = "/";
 	struct boot_sector BS = rbs();
 	printf("Welcome to shell.\n");
 	while (1) {
@@ -36,7 +39,6 @@ int shell() {
 		}
 		num_params -= 1;
 
-		//fields[num_params] = strtok(buffer, " \n");
 		if (strcmp(fields[0], "cat") == 0) {
 			if (num_params == 2) {
 				pid_t pid = fork();
@@ -51,16 +53,12 @@ int shell() {
 						fields[0]);
 			}
 		} else if (strcmp(fields[0], "cd") == 0) {
-			if (num_params == 2) {
-				pid_t pid = fork();
-				if (pid == 0) {
-					printf("Child process for %s.\n", fields[0]);
-					printf("Child process killed\n");
-					free(fields);
-					exit(0);
-				}
+			if (num_params == 2 || num_params == 1) {
+				//had to use thread instead of fork for this one.
+				current_dir = cd(BS, fields, num_params, current_dir);
+				printf("herro");
 			} else {
-				printf("Command %s requires an additional parameter.\n",
+				printf("Command %s take one or no params.\n",
 						fields[0]);
 			}
 		} else if (strcmp(fields[0], "df") == 0) {
@@ -129,8 +127,7 @@ int shell() {
 			if (num_params == 1) {
 				pid_t pid = fork();
 				if (pid == 0) {
-					printf("Child process for %s.\n", fields[0]);
-					printf("Child process killed\n");
+					printf("%s\n", current_dir);
 					free(fields);
 					exit(0);
 				}

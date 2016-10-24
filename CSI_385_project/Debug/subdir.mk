@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../cd.c \
 ../fat.c \
 ../fatSupport.c \
 ../pbs.c \
@@ -11,6 +12,7 @@ C_SRCS += \
 ../shell_code.c 
 
 OBJS += \
+./cd.o \
 ./fat.o \
 ./fatSupport.o \
 ./pbs.o \
@@ -18,6 +20,7 @@ OBJS += \
 ./shell_code.o 
 
 C_DEPS += \
+./cd.d \
 ./fat.d \
 ./fatSupport.d \
 ./pbs.d \

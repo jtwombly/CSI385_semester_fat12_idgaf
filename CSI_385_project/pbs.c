@@ -58,6 +58,11 @@ int get_large_int(char* boot, int val)
 	return bytesPerSector;
 }
 
+int get_huge_int(char* boot, int val){
+	int sum = 0;
+	sum = boot[val] | (boot[val+1]<<8) | (boot[val+2]<<16) | (boot[val+3]<<24);
+	return sum;
+}
 void pbs(struct boot_sector BS){
 	printf("Bytes per sector			=%d\n", BS.bp_sector);
 	printf("Sectors per cluster			=%d\n", BS.sp_cluster);
@@ -69,7 +74,7 @@ void pbs(struct boot_sector BS){
 	printf("Sectors per track			=%d\n", BS.sp_track);
 	printf("Number of heads				=%d\n", BS.num_heads);
 	printf("Boot signature (in hex)			=0x%2x\n", BS.boot_sig);
-	printf("Volume ID (in hex)			=0x%2x\n", BS.vol_id);
+	printf("Volume ID (in hex)			=0x8%2x\n", BS.vol_id);
 	printf("Volume Label				=%s\n", BS.vol_label);
 	printf("File System Type			=%s\n", BS.sys_type);
 }

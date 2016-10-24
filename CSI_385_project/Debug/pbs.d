@@ -1,7 +1,10 @@
-pbs.o: ../pbs.c ../shell_code.h ../fatSupport.h ../boot_sector.h
+pbs.o: ../pbs.c ../shell_code.h ../fatSupport.h ../boot_sector.h \
+ ../file_data.h
 
 ../shell_code.h:
 
 ../fatSupport.h:
 
 ../boot_sector.h:
+
+../file_data.h:
