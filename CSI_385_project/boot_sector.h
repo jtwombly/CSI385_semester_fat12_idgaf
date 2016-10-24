@@ -8,8 +8,7 @@
 #ifndef BOOT_SECTOR_H_
 #define BOOT_SECTOR_H_
 
-struct boot_sector
-{
+struct boot_sector {
 	int bp_sector;
 	int sp_cluster;
 	int num_fats;

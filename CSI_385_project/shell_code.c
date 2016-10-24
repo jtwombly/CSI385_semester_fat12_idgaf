@@ -7,10 +7,9 @@
 #include "shell_code.h"
 
 int shell() {
-	if (FILE_SYSTEM_ID == NULL)
-	{
-	  printf("Could not open the floppy drive or image.\n");
-	  exit(1);
+	if (FILE_SYSTEM_ID == NULL) {
+		printf("Could not open the floppy drive or image.\n");
+		exit(1);
 	}
 	char* current_dir;
 	current_dir = malloc(sizeof(char));
@@ -26,15 +25,14 @@ int shell() {
 
 		fields = malloc(num_params * sizeof(char*));
 		fields[0] = strtok(buffer, " ");
-		while (fields[num_params-1] != NULL) {
+		while (fields[num_params - 1] != NULL) {
 			//find number of parameters
 			num_params += 1;
 			fields = realloc(fields, num_params * sizeof(char*));
 			fields[num_params - 1] = strtok(NULL, " ");
 		}
 
-		for(int i=0; i< num_params; i++)
-		{
+		for (int i = 0; i < num_params; i++) {
 			fields[i] = strtok(fields[i], "\n");
 		}
 		num_params -= 1;
@@ -58,8 +56,7 @@ int shell() {
 				current_dir = cd(BS, fields, num_params, current_dir);
 				printf("herro");
 			} else {
-				printf("Command %s take one or no params.\n",
-						fields[0]);
+				printf("Command %s take one or no params.\n", fields[0]);
 			}
 		} else if (strcmp(fields[0], "df") == 0) {
 			if (num_params == 1) {
@@ -96,7 +93,8 @@ int shell() {
 					exit(0);
 				}
 			} else {
-				printf("Command %s requires an additional parameter\n", fields[0]);
+				printf("Command %s requires an additional parameter\n",
+						fields[0]);
 			}
 		} else if (strcmp(fields[0], "pbs") == 0) {
 			if (num_params == 1) {
@@ -173,7 +171,8 @@ int shell() {
 				printf("Command %s requires an additional parameter.\n",
 						fields[0]);
 			}
-		} else if (strcmp(fields[0], "exit") == 0 || strcmp(fields[0], "quit") == 0
+		} else if (strcmp(fields[0], "exit") == 0
+				|| strcmp(fields[0], "quit") == 0
 				|| strcmp(fields[0], "logout") == 0) {
 			return 0;
 		} else {

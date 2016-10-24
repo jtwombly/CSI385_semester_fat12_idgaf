@@ -8,7 +8,6 @@
 #ifndef SHELL_CODE_H_
 #define SHELL_CODE_H_
 
-
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -31,7 +30,8 @@ int checkRange(int min, int max);
 char* read_fat_table(struct boot_sector BS, int x);
 
 //in cd.c
-char* cd(struct boot_sector BS,char** fields, int num_params, char* current_dir);
+char* cd(struct boot_sector BS, char** fields, int num_params,
+		char* current_dir);
 char* get_absolute_path(char* cwd, char* param);
 int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF);
 int search_dir(char* filename, struct boot_sector BS, struct file_data* MF);

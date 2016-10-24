@@ -17,21 +17,17 @@
  * If too many args are given, exits with error.
  */
 
-int main(int argc, char * argv[])
-{
+int main(int argc, char * argv[]) {
 	int file_choice = 0;
-	if (argc == 2 || argc == 1)
-	{
+	if (argc == 2 || argc == 1) {
 		int file_choice = 0;
-		if (argc > 1){
+		if (argc > 1) {
 			file_choice = atoi(argv[1]);
 		}
-		if (file_choice > 3 || file_choice <  0)
-		{
+		if (file_choice > 3 || file_choice < 0) {
 			file_choice = 0;
 		}
-		switch(file_choice)
-		{
+		switch (file_choice) {
 		case 0:
 		case 1:
 			FILE_SYSTEM_ID = fopen("Sample_disks/floppy1", "r+");
@@ -50,10 +46,9 @@ int main(int argc, char * argv[])
 			break;
 		}
 		shell();
-	}
-	else if (argc > 2){
+	} else if (argc > 2) {
 		printf("Incorrect number of arguments\n");
 		return 1;
 	}
-   return 0;
+	return 0;
 }
