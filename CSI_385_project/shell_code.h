@@ -35,5 +35,6 @@ char* cd(struct boot_sector BS, char** fields, int num_params,
 char* get_absolute_path(char* cwd, char* param);
 int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF);
 int search_dir(char* filename, struct boot_sector BS, struct file_data* MF);
+char* clean_filename(char* string);
 
 #endif /* SHELL_CODE_H_ */

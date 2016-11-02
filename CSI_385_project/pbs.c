@@ -57,10 +57,17 @@ int get_large_int(char* boot, int val) {
 }
 
 int get_huge_int(char* boot, int val) {
-	int sum = 0;
-	sum = boot[val] | (boot[val + 1] << 8) | (boot[val + 2] << 16)
-			| (boot[val + 3] << 24);
-	return sum;
+
+	int mostSignificantBits;
+	int leastSignificantBits;
+	int almostSignificantBits;
+	int atleastSignificantBits;
+
+	almostSignificantBits = (((int) boot[val + 3]) << 24) & 0xff000000;
+	atleastSignificantBits = ((int) boot[val +2] << 16) & 0x00ff0000;
+	mostSignificantBits = (((int) boot[val + 1]) << 8) & 0x0000ff00;
+	leastSignificantBits = ((int) boot[val]) & 0x000000ff;
+	return almostSignificantBits | atleastSignificantBits | mostSignificantBits|leastSignificantBits;
 }
 void pbs(struct boot_sector BS) {
 	printf("Bytes per sector			=%d\n", BS.bp_sector);

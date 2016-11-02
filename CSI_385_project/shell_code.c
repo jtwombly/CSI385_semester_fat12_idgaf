@@ -54,7 +54,6 @@ int shell() {
 			if (num_params == 2 || num_params == 1) {
 				//had to use thread instead of fork for this one.
 				current_dir = cd(BS, fields, num_params, current_dir);
-				printf("herro");
 			} else {
 				printf("Command %s take one or no params.\n", fields[0]);
 			}

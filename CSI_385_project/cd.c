@@ -37,10 +37,8 @@ char* cd(struct boot_sector BS,char** fields, int num_params, char* current_dir)
 		}
 		else{
 			free(tmpdir);
-			printf("bye");
 			current_dir = malloc(strlen(mdir));
 			current_dir = strcpy(current_dir, mdir);
-			printf("%s\n", current_dir);
 			free(mdir);
 		}
 	}
@@ -53,17 +51,28 @@ char* cd(struct boot_sector BS,char** fields, int num_params, char* current_dir)
  */
 char* get_absolute_path(char* cwd, char* param)
 {
+	int msize, len = 0;
 	char* target_dir = "";
+	target_dir = (char *) malloc(1);
+	char mchar = "/";
 	if( strncmp(param, "/", 1) != 0)
 	{
-		target_dir = malloc(strlen(cwd)+ strlen(param)+2);
-		strcpy(target_dir, cwd);
-		strcat(target_dir, param);
+		msize = strlen(cwd);
+		target_dir =(char *) malloc(msize);
+		strcat(target_dir, cwd);
+		int len = strlen(cwd);
+		printf("last char: %d, %c\n", len, cwd[len-1]);
+		if(len > 0){
+			if (cwd[len-1] != '/'){
+				msize += 1;
+				target_dir = (char *) realloc(target_dir, msize);
+				strcat(target_dir, "/");
+			}
+		}
 	}
-	else {
-		//absolute path given
-		target_dir = param;
-	}
+	msize += strlen(param);
+	target_dir = (char *) realloc(target_dir, msize);
+	strcat(target_dir, param);
 	return target_dir;
 }
 
@@ -144,6 +153,7 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 					}
 				}
 			}
+			MF->filename = clean_filename(MF->filename);
 			for (int k = 0; k<3; k++)
 			{
 				MF->ext[k] = sector[(j*32)+ 8 + k];
@@ -152,7 +162,8 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 			MF->attr = sector[(j*32) + 11];
 			MF->first_logical_cluster = get_large_int(sector, (j*32) + 26);
 			MF->file_size = get_huge_int(sector, (j*32) + 28);
-			if (strncmp(MF->filename, filename, strlen(filename)) == 0)
+			printf("%s,%s, %d, %d, %d\n", MF->filename, MF->ext, MF-> attr, MF->first_logical_cluster, MF->file_size);
+			if (strcmp(MF->filename, filename) == 0)
 			{
 				return 1;
 
@@ -165,4 +176,50 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 	return 0;
 }
 
+char * clean_filename(char* mstr){
+	/*
+	 * Whenever a short filename is read, extra bytes are read
+	 * These bytes are pretty unsightly, and mess with the comparisons
+	 * THis function strips the random characters
+	 */
+	char ** fields;
+	int num_params = 1;
+	char* new_string;
 
+	fields = malloc(num_params * sizeof(char*));
+	fields[0] = strtok(mstr, " ");
+	while (fields[num_params - 1] != NULL) {
+		//find number of parameters
+		num_params += 1;
+		fields = realloc(fields, num_params * sizeof(char*));
+		fields[num_params - 1] = strtok(NULL, " ");
+	}
+	num_params -= 1;
+	if (num_params == 1){
+		int val1 = strcmp(fields[0], "Ae");
+		int val2 = strcmp(fields[0], "As");
+		if (val1==0){
+			new_string = ".";
+		}
+		else if(val2==0){
+			new_string = "..";
+		}
+		else{
+			new_string = mstr;
+		}
+		//entry string was fine
+	}
+	else{
+		int size = 0;
+		for ( int i = 0; i<(num_params - 1); i++){
+			size += strlen(fields[i]);
+		}
+		new_string = malloc(size * sizeof(char));
+		for (int j = 0; j<(num_params - 1); j++){
+			strcpy(new_string, fields[j]);
+		}
+	}
+	mstr = malloc(strlen(new_string));
+	strcpy(mstr, new_string);
+	return mstr;
+}
