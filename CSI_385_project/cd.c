@@ -61,7 +61,6 @@ char* get_absolute_path(char* cwd, char* param)
 		target_dir =(char *) malloc(msize);
 		strcat(target_dir, cwd);
 		int len = strlen(cwd);
-		printf("last char: %d, %c\n", len, cwd[len-1]);
 		if(len > 0){
 			if (cwd[len-1] != '/'){
 				msize += 1;
@@ -82,6 +81,16 @@ int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF)
 	int found = 0;
 	char ** fields;
 	int num_params = 1;
+	if(strcmp(abs_path, "/")==0){
+		MF->filename = malloc(8 * sizeof(char));
+		MF->ext = malloc(3 * sizeof(char));
+		MF->filename = "/";
+		MF-> first_logical_cluster = 0;
+		MF-> attr = 16;
+		MF->file_size = 0;
+		//printf("root_init\n");
+		return 1;
+	}
 	fields = malloc(num_params * sizeof(char*));
 	abs_path = strtok(abs_path, "/");
 	fields[0] = strtok(abs_path, "/");
@@ -91,11 +100,11 @@ int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF)
 		fields = realloc(fields, num_params * sizeof(char*));
 		fields[num_params - 1] = strtok(NULL, "/");
 	}
-	printf("Num_params = %d\n", num_params);
+	MF->attr = 16;
 	for(int i=0; i< num_params - 1; i++)
 		{
 			fields[i] = strtok(fields[i], "\n");
-			printf("%s\n", fields[i]);
+			//printf("%s\n", fields[i]);
 			//search child directories
 			if(MF->attr==16 || !MF->attr)
 			{
@@ -121,7 +130,16 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 {
 	setvbuf (stdout, NULL, _IONBF, 0);
 	int fin = 0;
-	char* temp_string = malloc(strlen(filename));
+	int has_ext = 0;
+	char* f_name = strtok(filename, ".");
+	char* f_ext = strtok(NULL, ".");
+	if(f_ext){
+		has_ext = 1;
+		for(int j=0; j<strlen(f_ext); j++){
+			f_ext[j] = toupper(f_ext[j]);
+		}
+	}
+	char* temp_string = malloc(strlen(f_name));
 	for(int i=0; i< strlen(filename); i++)
 	{
 		temp_string[i] = toupper(filename[i]);
@@ -131,10 +149,10 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 	free(temp_string);
 
 	int start_sector = (BS.num_fats * BS.sp_fat) + 1;
-
-	if(MF->filename != NULL){
-		start_sector = MF->first_logical_cluster;
-	}
+	if(MF->filename != NULL && MF->first_logical_cluster > 1){
+			start_sector += 12 + MF->first_logical_cluster;
+		}
+	//printf("Reading sector: %d\n", start_sector);
 	while(fin == 0){
 		char * sector = malloc(BYTES_PER_SECTOR*(sizeof(char)));
 		read_sector(start_sector, sector);
@@ -162,11 +180,17 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 			MF->attr = sector[(j*32) + 11];
 			MF->first_logical_cluster = get_large_int(sector, (j*32) + 26);
 			MF->file_size = get_huge_int(sector, (j*32) + 28);
-			printf("%s,%s, %d, %d, %d\n", MF->filename, MF->ext, MF-> attr, MF->first_logical_cluster, MF->file_size);
+			//printf("%s,%s, %d, %d, %d\n", MF->filename, MF->ext, MF-> attr, MF->first_logical_cluster, MF->file_size);
 			if (strcmp(MF->filename, filename) == 0)
 			{
-				return 1;
-
+				if(has_ext == 1){
+					if(strncmp(MF->ext, f_ext, strlen(f_ext)) == 0){
+						return 1;
+					}
+				}
+				else{
+					return 1;
+				}
 			}
 			free(MF->filename);
 			free(MF->ext);

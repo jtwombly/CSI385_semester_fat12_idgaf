@@ -37,4 +37,11 @@ int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF);
 int search_dir(char* filename, struct boot_sector BS, struct file_data* MF);
 char* clean_filename(char* string);
 
+//in ls.c
+void ls(struct boot_sector BS, char** fields, int num_params, char* current_dir);
+int list_dir(struct boot_sector BS, struct file_data* MF);
+char* find_parent_dir(char* child_file);
+int list_file(struct boot_sector BS, struct file_data* MF, char* file_name);
+
+
 #endif /* SHELL_CODE_H_ */

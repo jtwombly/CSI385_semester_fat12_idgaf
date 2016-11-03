@@ -74,6 +74,7 @@ int shell() {
 				pid_t pid = fork();
 				if (pid == 0) {
 					printf("Child process for %s.\n", fields[0]);
+					ls(BS, fields, num_params, current_dir);
 					printf("Child process killed\n");
 					free(fields);
 					exit(0);
