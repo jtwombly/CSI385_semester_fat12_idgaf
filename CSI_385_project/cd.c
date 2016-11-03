@@ -88,11 +88,9 @@ int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF)
 		MF-> first_logical_cluster = 0;
 		MF-> attr = 16;
 		MF->file_size = 0;
-		//printf("root_init\n");
 		return 1;
 	}
 	fields = malloc(num_params * sizeof(char*));
-	abs_path = strtok(abs_path, "/");
 	fields[0] = strtok(abs_path, "/");
 	while (fields[num_params-1] != NULL) {
 		//find number of parameters
@@ -101,26 +99,21 @@ int find_target(char* abs_path, struct boot_sector BS, struct file_data* MF)
 		fields[num_params - 1] = strtok(NULL, "/");
 	}
 	MF->attr = 16;
+	//printf("num_params=%d\n", num_params);
 	for(int i=0; i< num_params - 1; i++)
 		{
+			//printf("iter %d\n", i);
 			fields[i] = strtok(fields[i], "\n");
 			//printf("%s\n", fields[i]);
 			//search child directories
 			if(MF->attr==16 || !MF->attr)
 			{
+				//printf("Before: %s \n", MF-> filename);
 				found = search_dir(fields[i], BS, MF);
-				if (found == 0){
-					return 0;
-				}
-			}
-			else{
-				if(i == num_params-2)
-				{
-					return 1;
-				}
-				else{
-					return 0;
-				}
+				//printf("After: %s \n", MF-> filename);
+				//if (found == 0){
+				//	return 0;
+				//}
 			}
 		}
 	return 1;
@@ -185,6 +178,7 @@ int search_dir(char* filename, struct boot_sector BS, struct file_data* MF)
 			{
 				if(has_ext == 1){
 					if(strncmp(MF->ext, f_ext, strlen(f_ext)) == 0){
+						free(sector);
 						return 1;
 					}
 				}

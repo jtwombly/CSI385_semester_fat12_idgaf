@@ -92,7 +92,7 @@ char* find_parent_dir(char* child_file){
 
 int list_dir(struct boot_sector BS, struct file_data* MF)
 {
-	printf("here1, %s, %d\n", MF->filename, MF->first_logical_cluster);
+	//printf("here1, %s, %d\n", MF->filename, MF->first_logical_cluster);
 	printf("ls for a directory\n");
 	setvbuf (stdout, NULL, _IONBF, 0);
 	int fin = 0;
@@ -102,7 +102,7 @@ int list_dir(struct boot_sector BS, struct file_data* MF)
 	if(MF->filename != NULL && MF->first_logical_cluster > 1){
 		start_sector += 12 + MF->first_logical_cluster;
 	}
-	printf("Reading sector: %d\n", start_sector);
+	//printf("Reading sector: %d\n", start_sector);
 	while(fin == 0){
 		char * sector = malloc(BYTES_PER_SECTOR*(sizeof(char)));
 		read_sector(start_sector, sector);
@@ -133,10 +133,7 @@ int list_dir(struct boot_sector BS, struct file_data* MF)
 			if(strlen(MF->filename)>0){
 				printf("%s,%s, %d, %d, %d\n", MF->filename, MF->ext, MF-> attr, MF->first_logical_cluster, MF->file_size);
 			}
-			free(MF->filename);
-			free(MF->ext);
 		}
-		free(sector);
 		start_sector +=1;
 	}
 	return 0;
